@@ -1,0 +1,39 @@
+<!-- Bootstrap Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <!-- Logo on the left -->
+        <a class="navbar-brand" href="#">
+            <strong>MaidVally</strong> <!-- Replace with your logo image if needed -->
+        </a>
+
+        <!-- Toggle button for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto"> <!-- ms-auto for right alignment -->
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Clients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Jobs</a>
+                </li>        
+                <!-- Logout link -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a> 
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% if current_user.is_authenticated %}
+    <div class="user-info-container">
+        <span class="username">{{ current_user.name }}</span>
+    </div>
+{% endif %}
+

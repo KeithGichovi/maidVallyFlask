@@ -1,0 +1,76 @@
+/* Purple button styling */
+.btn-purple {
+    background-color: #6a1b9a; /* Purple color */
+    color: white;
+    border: none;
+}
+
+.btn-purple:hover {
+    background-color: #8e24aa; /* Lighter purple on hover */
+    color: white;
+}
+
+/* Customizing form input fields */
+.form-control {
+    border-radius: 0.375rem;
+    box-shadow: none;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+/* Center the login card within the screen */
+.card {
+    max-width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Responsiveness for various screen sizes */
+@media (max-width: 768px) {
+    .col-md-6 {
+        width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    .col-md-6 {
+        width: 100%;
+    }
+}
+
+.user-info-container {
+    padding: 8px 15px;
+    display: flex;
+    align-items: right;
+}
+
+.user-info-container .username {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.user-info-container .btn {
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .user-info-container {
+        font-size: 14px;
+    }
+
+    .user-info-container .btn {
+        font-size: 10px;
+    }
+}
