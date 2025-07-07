@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
                 bool: True if the email is in the whitelist, False otherwise.
         """
         from flask import current_app
-        return email in current_app.config['ALLOWED_EMAILS']
+        return True if email in current_app.config['ALLOWED_EMAILS'] else False
     
     def is_authorized(self):
         """

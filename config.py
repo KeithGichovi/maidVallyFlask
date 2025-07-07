@@ -1,11 +1,11 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
-    ALLOWED_EMAILS = [
-        'kgichovi04@gmail.com',
-        'joan.mapesa@yahoo.com'
-    ]
+    ALLOWED_EMAILS = os.getenv('ALLOWED_EMAILS').split(',')
     # Flask-SQLAlchemy configurations
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:Sasha1301@localhost:3306/maidvally'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
