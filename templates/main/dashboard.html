@@ -2,6 +2,83 @@
 {% block content %}
     <div class="container">
         {% include "navbar.html" %}
-        
+        <div class="stats-container">
+            <div class="row g-4">
+                <div class="col-12 col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon clients-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-number">{{ active_clients }}</div>
+                        <div class="stat-label">Active Clients</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon profit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-number">£ {{ total_profit }}</div>
+                        <div class="stat-label">Total Profit</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon paid-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-number">{{ total_paid }}</div>
+                        <div class="stat-label">Total Paid</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clients-container">
+            <div class="performance-metrics">
+                <h3>This Month's Performance</h3>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ completion_rate }}%</div>
+                            <div class="metric-label">Completion Rate</div>
+                            <div class="metric-trend {{ 'positive' if completion_trend > 0 else 'negative' if completion_trend < 0 else 'neutral' }}">
+                                <i class="fas fa-arrow-{{ 'up' if completion_trend > 0 else 'down' if completion_trend < 0 else 'right' }}"></i> 
+                                {{ completion_trend|abs }}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value">£{{ "%.0f"|format(avg_job_value) }}</div>
+                            <div class="metric-label">Avg Job Value</div>
+                            <div class="metric-trend {{ 'positive' if job_value_trend > 0 else 'negative' if job_value_trend < 0 else 'neutral' }}">
+                                <i class="fas fa-arrow-{{ 'up' if job_value_trend > 0 else 'down' if job_value_trend < 0 else 'right' }}"></i> 
+                                {{ job_value_trend|abs }}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ total_jobs_month }}</div>
+                            <div class="metric-label">Jobs This Month</div>
+                            <div class="metric-trend {{ 'positive' if jobs_trend > 0 else 'negative' if jobs_trend < 0 else 'neutral' }}">
+                                <i class="fas fa-arrow-{{ 'up' if jobs_trend > 0 else 'down' if jobs_trend < 0 else 'right' }}"></i> 
+                                {{ jobs_trend|abs }}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ payment_rate }}%</div>
+                            <div class="metric-label">Payment Rate</div>
+                            <div class="metric-trend {{ 'positive' if payment_trend > 0 else 'negative' if payment_trend < 0 else 'neutral' }}">
+                                <i class="fas fa-arrow-{{ 'up' if payment_trend > 0 else 'down' if payment_trend < 0 else 'right' }}"></i> 
+                                {{ payment_trend|abs }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
