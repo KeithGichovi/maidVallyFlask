@@ -43,4 +43,13 @@ def create_app():
    app.register_blueprint(clients_bp)
    app.register_blueprint(jobs_bp)
 
+   @app.template_filter('format_enum')
+   def format_enum(value):
+      """Format enum values for display"""
+      if value:
+         # Convert enum to string value if needed
+         str_value = value.value if hasattr(value, 'value') else str(value)
+         return str_value.replace('_', ' ').title()
+      return value
+
    return app

@@ -47,7 +47,7 @@ def index():
 @login_required
 def dashboard():
     # Count all clients
-    active_clients = len(Client.query.all())
+    active_clients = len(Client.query.filter_by(status='ACTIVE').all())
     
     # Get all jobs and calculate totals
     jobs = Job.query.all()

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        {% include "navbar.html" %}
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="fa fa-pencil"></i> Edit Client: {{ client.name }}
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            
+                            <!-- Name Field -->
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control") }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Client Type Field -->
+                            <div class="mb-3">
+                                {{ form.client_type.label(class="form-label") }}
+                                {{ form.client_type(class="form-select") }}
+                                {% if form.client_type.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.client_type.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Status Field -->
+                            <div class="mb-3">
+                                {{ form.status.label(class="form-label") }}
+                                {{ form.status(class="form-select") }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.status.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('clients.clients') }}" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Back to Clients
+                                </a>
+                                {{ form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Client Information Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Client Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Current Status:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {% if client.status == 'ACTIVE' %}
+                                    <span class="badge rounded-pill bg-success">{{ client.status | format_enum }}</span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-secondary">{{ client.status | format_enum }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <strong>Client Type:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {% if client.client_type == 'INDIVIDUAL' %}
+                                    <span class="badge rounded-pill" style="background-color: purple; color: white;">{{ client.client_type | format_enum }}</span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-danger">{{ client.client_type | format_enum }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <strong>Client ID:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                #{{ client.id }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                if (alert.classList.contains('show')) {
+                    alert.classList.remove('show');
+                }
+            });
+        }, 5000);
+    </script>
+{% endblock %}
