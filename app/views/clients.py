@@ -1,6 +1,6 @@
 from app.models import Client, Job, Payment
 from app.views import clients_bp
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from flask_login import login_required
 from app.forms.clients import AddClientForm, EditClientForm
 from app.models import Client, db, ClientTypeEnum, ClientStatusEnum
@@ -40,6 +40,11 @@ def edit_client(client_id):
     client = Client.query.get_or_404(client_id)
     form = EditClientForm(obj=client)  
     
+    if request.method == 'GET':
+        form.name.data = client.name
+        form.client_type.data = client.client_type.name if hasattr(client.client_type, 'name') else client.client_type
+        form.status.data = client.status.name if hasattr(client.status, 'name') else client.status
+
     if form.validate_on_submit():
         client.name = form.name.data
         client.client_type = form.client_type.data

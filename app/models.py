@@ -155,7 +155,6 @@ class Payment(db.Model):
     amount = db.Column(db.Float, nullable=False)
     payment_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     due_date = db.Column(db.DateTime, nullable=False)
-    payment_method = db.Column(db.String(50), nullable=False)
     payment_status = db.Column(db.Enum(PaymentStatus), nullable=False)
     notes = db.Column(db.String(255), nullable=True)
 

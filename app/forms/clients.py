@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, ValidationError
+from wtforms import StringField,SubmitField, SelectField
+from wtforms.validators import DataRequired, Length
 from app.models import ClientStatusEnum, ClientTypeEnum
 
 class AddClientForm(FlaskForm):

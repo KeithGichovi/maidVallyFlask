@@ -301,3 +301,12 @@
         padding: 1.5rem;
     }
 }
+
+.job-card {
+        transition: all 0.2s ease;
+    }
+
+.job-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
