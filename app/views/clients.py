@@ -44,8 +44,6 @@ def edit_client(client_id):
         client.name = form.name.data
         client.client_type = form.client_type.data
         client.status = form.status.data
-        
-        # No need for db.session.add() when updating existing objects
         db.session.commit()
         flash('Client updated successfully!', 'success')
         return redirect(url_for('clients.clients'))

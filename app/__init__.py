@@ -1,5 +1,5 @@
 from flask import Flask
-from app.extensions import *  # Assuming you have all extensions in the 'extensions' module
+from app.extensions import *
 from config import Config
 import os
 

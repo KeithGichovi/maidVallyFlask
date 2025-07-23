@@ -18,6 +18,20 @@ csrf = CSRFProtect()
 bootstrap = Bootstrap5()
 
 def make_celery(app):
+    """
+    Create a Celery instance configured with the given Flask app.
+
+    This function creates a new Celery instance with the given Flask app's name,
+    and updates the Celery configuration with the app's configuration. It also
+    creates a custom task class that sets up the Flask app context before
+    running the task.
+
+    Args:
+        app: The Flask app to use for Celery configuration.
+
+    Returns:
+        The newly created Celery instance.
+    """
     celery = Celery(app.import_name)
     celery.conf.update(app.config)
 
