@@ -116,8 +116,8 @@ class Job(db.Model):
     @property
     def total_paid(self):
         """Calculate total amount paid for this job"""
-        return sum(payment.amount for payment in self.payments if payment.payment_status == PaymentStatus.PAID)
-    
+        return sum(payment.amount for payment in self.payments)
+
     @property
     def total_expenses(self):
         """Calculate total expenses for this job"""

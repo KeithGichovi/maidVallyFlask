@@ -37,11 +37,12 @@ def create_app():
    from app import models
 
    # Register Blueprints for different routes (modular views)
-   from app.views import auth_bp, main_bp, clients_bp, jobs_bp
+   from app.views import auth_bp, main_bp, clients_bp, jobs_bp, http_bp
    app.register_blueprint(auth_bp)
    app.register_blueprint(main_bp)
    app.register_blueprint(clients_bp)
    app.register_blueprint(jobs_bp)
+   app.register_blueprint(http_bp)
 
    @app.template_filter('format_enum')
    def format_enum(value):

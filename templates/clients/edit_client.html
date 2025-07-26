@@ -96,8 +96,103 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <strong>Total Jobs:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ stats.total_jobs }} jobs
+                            </div>
+                        </div>
+                        {% if stats.total_jobs > 0 %}
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <strong>Total Revenue:</strong>
+                                </div>
+                                <div class="col-md-8">
+                                    £{{ "%.2f"|format(stats.total_amount) }}
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <strong>Outstanding Balance:</strong>
+                                </div>
+                                <div class="col-md-8">
+                                    <span class="{{ 'text-success' if stats.outstanding_amount == 0 else 'text-warning' }}">
+                                        £{{ "%.2f"|format(stats.outstanding_amount) }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-center">
+                            <a href="{{ url_for('jobs.jobs', search=client.name) }}" class="btn btn-outline-info btn-sm">
+                                <i class="fa fa-briefcase"></i> View All Jobs
+                            </a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Invoice Generation Card -->
+                <div class="card mt-4 mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fa fa-file-text"></i> Invoice Generation
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4">Generate invoices for {{ client.name }} based on different time periods and criteria.</p>
+                        
+                        <div class="row">
+                            <!-- Quick Invoice Options -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3">Quick Invoices</h6>
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('clients.generate_invoice', client_id=client.id, period='current_month') }}" class="btn btn-outline-primary">
+                                        <i class="fa fa-calendar"></i> Current Month
+                                        <small class="d-block text-muted">{{ current_month_name }}</small>
+                                    </a>
+                                    <a href="{{ url_for('clients.generate_invoice', client_id=client.id, period='last_month') }}" class="btn btn-outline-primary">
+                                        <i class="fa fa-calendar-minus-o"></i> Previous Month
+                                        <small class="d-block text-muted">{{ previous_month_name }}</small>
+                                    </a>
+                                    <a href="{{ url_for('clients.generate_invoice', client_id=client.id, period='all_unpaid') }}" class="btn btn-outline-warning">
+                                        <i class="fa fa-exclamation-triangle"></i> Outstanding Jobs
+                                        <small class="d-block text-muted">All unpaid work</small>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Custom Invoice Options -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3">Custom Period</h6>
+                                <form method="GET" action="{{ url_for('clients.generate_invoice', client_id=client.id) }}">
+                                    <div class="mb-3">
+                                        <label class="form-label">From Date</label>
+                                        <input type="date" name="start_date" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">To Date</label>
+                                        <input type="date" name="end_date" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="unpaid_only" id="unpaidOnly">
+                                            <label class="form-check-label" for="unpaidOnly">
+                                                Only unpaid jobs
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="fa fa-file-pdf-o"></i> Generate Custom Invoice
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

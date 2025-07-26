@@ -82,10 +82,3 @@ def toggle_payment(job_id):
     db.session.commit()
     return redirect(url_for('jobs.jobs'))
 
-@jobs_bp.route('/generate_invoice/<int:job_id>')
-@login_required
-def generate_invoice(job_id):
-    job = Job.query.get_or_404(job_id)
-    # TODO: Implement invoice generation
-    flash('Invoice generation coming soon!', 'info')
-    return redirect(url_for('jobs.jobs'))
