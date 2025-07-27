@@ -1,4 +1,4 @@
-from app.models import Client, Job, Payment
+from app.models import Client, Job, Payment, PaymentStatus
 from app.views import clients_bp
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required
@@ -114,30 +114,141 @@ def activate_client(client_id):
     
     return jsonify({'success': True, 'message': 'Client activated successfully'})
 
+
 @clients_bp.route('/generate_invoice/<int:client_id>')
 @clients_bp.route('/generate_invoice/<int:client_id>/<period>')
 @login_required
 def generate_invoice(client_id, period=None):
-    client = Client.query.get_or_404(client_id)
+    from datetime import datetime, timedelta
     
-    # Handle URL parameters
+    client = Client.query.get_or_404(client_id)
+    api_json = {
+        "client_id": client.id,
+        "client_name": client.name,
+        "jobs": []
+    }
+    
+    # Handle URL parameters - FIX: Convert string to boolean
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
-    unpaid_only = request.args.get('unpaid_only')
+    unpaid_only_param = request.args.get('unpaid_only')
+    
+    # Convert string to boolean
+    unpaid_only = unpaid_only_param in ['true', 'True', '1', 'yes', 'on'] if unpaid_only_param else False
+
+    # Helper function to check if job should be included
+    def should_include_job(job):
+        if unpaid_only:
+            payments = Payment.query.filter_by(job_id=job.id).first()
+            is_unpaid = payments is None or payments.payment_status == PaymentStatus.UNPAID
+            return is_unpaid
+        return True
     
     if start_date and end_date:
-        # Custom date range
-        pass
+        start_datetime = datetime.strptime(start_date, '%Y-%m-%d')
+        end_datetime = datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
+        
+        list_of_jobs_in_custom_range = Job.query.filter_by(client_id=client_id).filter(
+            Job.time_started.between(start_datetime, end_datetime)
+        ).all()
+        
+        for job in list_of_jobs_in_custom_range:
+            if should_include_job(job):
+                job_details = {
+                    "job_id": job.id,
+                    "job_type": job.job_type.name,
+                    "total_amount": job.total_amount,
+                    "time_started": job.time_started.isoformat(),
+                    "time_ended": job.time_ended.isoformat(),
+                    "location": job.location,
+                    "description": job.description
+                }
+                api_json["jobs"].append(job_details)
+        
+        return jsonify(api_json)
+
     elif period == 'current_month':
-        # Current month logic
-        pass
+        print("DEBUG: Current month section")
+        now = datetime.now()
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        
+        list_of_jobs_in_current_month = Job.query.filter_by(client_id=client_id).filter(
+            Job.time_started >= month_start
+        ).all()
+        
+        print(f"DEBUG: Found {len(list_of_jobs_in_current_month)} jobs in current month")
+        
+        for job in list_of_jobs_in_current_month:
+            if should_include_job(job):
+                job_details = {
+                    "job_id": job.id,
+                    "job_type": job.job_type.name,
+                    "total_amount": job.total_amount,
+                    "time_started": job.time_started.isoformat(),
+                    "time_ended": job.time_ended.isoformat(),
+                    "location": job.location,
+                    "description": job.description
+                }
+                api_json["jobs"].append(job_details)        
+        return jsonify(api_json)
+
     elif period == 'last_month':
-        # Previous month logic
-        pass
-    elif period == 'all_unpaid':
-        # All unpaid jobs
-        pass
-    
-    # Generate invoice and return
-    flash(f'Invoice generated for {client.name}', 'success')
-    return redirect(url_for('clients.edit_client', client_id=client_id))
+        now = datetime.now()
+        last_month_end = now.replace(day=1) - timedelta(days=1)
+        last_month_start = last_month_end.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        last_month_end = last_month_end.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        list_of_jobs_in_last_month = Job.query.filter_by(client_id=client_id).filter(
+            Job.time_started.between(last_month_start, last_month_end)
+        ).all()
+        
+        for job in list_of_jobs_in_last_month:
+            if should_include_job(job):
+                job_details = {
+                    "job_id": job.id,
+                    "job_type": job.job_type.name,
+                    "total_amount": job.total_amount,
+                    "time_started": job.time_started.isoformat(),
+                    "time_ended": job.time_ended.isoformat(),
+                    "location": job.location,
+                    "description": job.description
+                }
+                api_json["jobs"].append(job_details)
+        
+        return jsonify(api_json)
+
+    elif period == 'all_unpaid' or unpaid_only:
+        list_of_jobs = Job.query.filter_by(client_id=client_id).all()
+        for job in list_of_jobs:
+            payments = Payment.query.filter_by(job_id=job.id).first()
+            if payments is None or payments.payment_status == PaymentStatus.UNPAID:
+                job_details = {
+                    "job_id": job.id,
+                    "job_type": job.job_type.name,
+                    "total_amount": job.total_amount,
+                    "time_started": job.time_started.isoformat(),
+                    "time_ended": job.time_ended.isoformat(),
+                    "location": job.location,
+                    "description": job.description
+                }
+                api_json["jobs"].append(job_details)
+        
+        return jsonify(api_json)
+
+    # Default - all jobs
+    else:
+        all_jobs = Job.query.filter_by(client_id=client_id).all()
+        for job in all_jobs:
+            if should_include_job(job):
+                job_details = {
+                    "job_id": job.id,
+                    "job_type": job.job_type.name,
+                    "total_amount": job.total_amount,
+                    "time_started": job.time_started.isoformat(),
+                    "time_ended": job.time_ended.isoformat(),
+                    "location": job.location,
+                    "description": job.description
+                }
+                api_json["jobs"].append(job_details)
+        
+        return jsonify(api_json)
