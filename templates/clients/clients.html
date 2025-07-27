@@ -50,7 +50,6 @@
                                     </div>
                                 {% endif %}
                             </div>
-
                             <!-- Status Field -->
                             <div class="mb-3">
                                 {{ form.status.label(class="form-label") }}
@@ -63,6 +62,59 @@
                                     </div>
                                 {% endif %}
                             </div>
+
+                            <!-- Address Field -->
+                            <div class="mb-3">
+                                {{ form.address.label(class="form-label") }}
+                                {{ form.address(class="form-control") }}
+                                {% if form.address.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.address.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- City Field -->
+                            <div class="mb-3">
+                                {{ form.city.label(class="form-label") }}
+                                {{ form.city(class="form-control") }}
+                                {% if form.city.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.city.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- State Field -->
+                            <div class="mb-3">
+                                {{ form.state.label(class="form-label") }}
+                                {{ form.state(class="form-control") }}
+                                {% if form.state.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.state.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Post Code Field -->
+                            <div class="mb-3">
+                                {{ form.post_code.label(class="form-label") }}
+                                {{ form.post_code(class="form-control") }}
+                                {% if form.post_code.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.post_code.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

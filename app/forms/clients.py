@@ -9,10 +9,18 @@ class AddClientForm(FlaskForm):
     ])
     client_type = SelectField('Client Type', choices=[ (i.value, i.name.title()) for i in ClientTypeEnum], validators=[DataRequired()])
     status = SelectField('Status', choices=[ (i.value, i.name.title()) for i in ClientStatusEnum], validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    state = StringField('State', validators=[DataRequired()])
+    post_code = StringField('Post Code', validators=[DataRequired()])
     submit = SubmitField('Add Client')
 
 class EditClientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     client_type = SelectField('Client Type', choices=[ (i.value, i.value) for i in ClientTypeEnum], validators=[DataRequired()])
     status = SelectField('Status', choices=[ (i.value, i.value) for i in ClientStatusEnum], validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    state = StringField('State', validators=[DataRequired()])
+    post_code = StringField('Post Code', validators=[DataRequired()])
     submit = SubmitField('Update Client')

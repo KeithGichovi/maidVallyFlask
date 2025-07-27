@@ -74,6 +74,10 @@ class Client(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     client_type = db.Column(db.Enum(ClientTypeEnum), nullable=False)
     status = db.Column(db.Enum(ClientStatusEnum), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(255), nullable=False)
+    state = db.Column(db.String(255), nullable=False)
+    post_code = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     
     # Relationships

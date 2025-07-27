@@ -19,7 +19,11 @@ def clients():
         new_client = Client(
             name=form.name.data,
             client_type=form.client_type.data,
-            status=form.status.data
+            status=form.status.data,
+            address=form.address.data,
+            city=form.city.data,
+            state=form.state.data,
+            post_code=form.post_code.data
         )
         db.session.add(new_client)
         db.session.commit()
@@ -48,6 +52,10 @@ def edit_client(client_id):
         client.name = form.name.data
         client.client_type = form.client_type.data
         client.status = form.status.data
+        client.address = form.address.data
+        client.city = form.city.data
+        client.state = form.state.data
+        client.post_code = form.post_code.data
         db.session.commit()
         flash('Client updated successfully!', 'success')
         return redirect(url_for('clients.clients'))
@@ -140,6 +148,10 @@ def get_invoice_data(client_id, period=None):
     api_json = {
         "client_id": client.id,
         "client_name": client.name,
+        'client_address': client.address,
+        'client_city': client.city,
+        'client_state': client.state,
+        'client_post_code': client.post_code,
         "jobs": []
     }
     
