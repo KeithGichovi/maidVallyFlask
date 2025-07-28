@@ -58,7 +58,7 @@ def edit_client(client_id):
         client.post_code = form.post_code.data
         db.session.commit()
         flash('Client updated successfully!', 'success')
-        return redirect(url_for('clients.clients'))
+        return redirect(url_for('clients.edit_client', client_id=client.id))
     
     now = datetime.now()
     
