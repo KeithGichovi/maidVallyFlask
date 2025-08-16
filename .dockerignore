@@ -124,10 +124,6 @@ instance/
 tmp/
 temp/
 
-# Config files with sensitive data
-config.py
-settings.py
-secrets.json
 
 # SSL certificates
 *.pem

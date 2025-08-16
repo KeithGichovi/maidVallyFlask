@@ -46,8 +46,17 @@ from datetime import datetime, timedelta
 @login_required
 def edit_client(client_id):
     client = Client.query.get_or_404(client_id)
-    form = EditClientForm(obj=client)  
-    
+    form = EditClientForm()
+
+    if request.method == 'GET':
+        form.name.data = client.name
+        form.client_type.data = client.client_type
+        form.status.data = client.status
+        form.address.data = client.address
+        form.city.data = client.city
+        form.state.data = client.state
+        form.post_code.data = client.post_code
+            
     if form.validate_on_submit():
         client.name = form.name.data
         client.client_type = form.client_type.data
@@ -58,6 +67,8 @@ def edit_client(client_id):
         client.post_code = form.post_code.data
         db.session.commit()
         flash('Client updated successfully!', 'success')
+        
+        # Redirect to same page
         return redirect(url_for('clients.edit_client', client_id=client.id))
     
     now = datetime.now()

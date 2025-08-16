@@ -22,6 +22,12 @@ def create_app():
    csrf.init_app(app)
    bootstrap.init_app(app)
 
+   # configure celery
+   make_celery(app)
+
+   # import tasks to register them
+   from app import tasks
+
    # User loader for Flask-Login
    @login_manager.user_loader
    def load_user(user_id):

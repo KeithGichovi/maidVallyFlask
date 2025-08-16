@@ -13,8 +13,8 @@ def jobs():
     # Handle form submission (like handleAddJob in React)
     if form.validate_on_submit():
         job = Job(
-            client_id=form.client_id.data,
             job_type_id=form.job_type_id.data,
+            client_id=form.client_id.data,
             total_amount=form.total_amount.data,
             time_started=form.time_started.data,
             time_ended=form.time_ended.data,

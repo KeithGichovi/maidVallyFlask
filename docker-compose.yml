@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: "on-failure:3"
+    command: ["./wait-for-db.sh", "db", "python", "app.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: maidvally
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    depends_on:
+      - db
+    restart: "on-failure:3"
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  celery:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    command: ["./wait-for-db.sh", "db", "celery", "-A", "celery_worker.celery", "worker", "--loglevel=info"]
+    restart: "on-failure:3"
+
+  celery_beat:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - web
+      - redis
+    command: ["./wait-for-db.sh", "db", "celery", "-A", "celery_beat.celery", "beat", "--loglevel=info"]
+    restart: "on-failure:3"
+
+volumes:
+  mysql_data:

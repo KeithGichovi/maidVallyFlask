@@ -17,6 +17,8 @@ mail = Mail()
 csrf = CSRFProtect()
 bootstrap = Bootstrap5()
 
+celery = Celery()
+
 def make_celery(app):
     """
     Create a Celery instance configured with the given Flask app.

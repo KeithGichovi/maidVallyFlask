@@ -112,3 +112,10 @@ def dashboard():
         payment_rate=payment_rate,
         payment_trend=payment_trend
     )
+
+@main_bp.route('/health')
+def health_check():
+    try:
+        return 'OK', 200
+    except Exception as e:
+        return str(e), 500
