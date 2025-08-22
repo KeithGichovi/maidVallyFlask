@@ -130,6 +130,15 @@
                                                     {% endif %}
                                                 </form>
                                             </div>
+                                            <!-- Action Buttons to delete job -->
+                                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                                <form method="POST" action="{{ url_for('jobs.delete_job', job_id=job.id) }}" class="d-inline">
+                                                    {{ form.csrf_token }}
+                                                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                                            <i class="fa fa-times"></i> Delete Job
+                                                        </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

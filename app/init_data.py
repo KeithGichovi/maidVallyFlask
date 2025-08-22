@@ -20,20 +20,14 @@ def init_job_types():
         if not existing:
             job_type = JobType(name=job_type_name)
             db.session.add(job_type)
-            print(f"✅ Added job type: {job_type_name}")
-        else:
-            print(f"⏭️  Job type already exists: {job_type_name}")
-    
+
     db.session.commit()
-    print("🎉 Job types initialization complete!")
 
 def init_sample_data():
     """Create sample data for testing (only if no data exists)"""
     
     # Only create sample data if no clients exist
     if Client.query.count() == 0:
-        print("🏗️  Creating sample data...")
-        
         # Create sample client
         client = Client(
             name="Test Client Ltd",
@@ -75,6 +69,5 @@ def init_sample_data():
             db.session.add(overdue_payment)
         
         db.session.commit()
-        print("🎉 Sample data created successfully!")
     else:
-        print("⏭️  Sample data already exists, skipping...")
+        pass

@@ -82,3 +82,13 @@ def toggle_payment(job_id):
     db.session.commit()
     return redirect(url_for('jobs.jobs'))
 
+@jobs_bp.route('/delete_job/<int:job_id>', methods=['POST'])
+@login_required
+def delete_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.total_paid > 0:
+        flash('Cannot delete job with payments', 'danger')
+        return redirect(url_for('jobs.jobs'))
+    db.session.delete(job)
+    db.session.commit()
+    return redirect(url_for('jobs.jobs'))
