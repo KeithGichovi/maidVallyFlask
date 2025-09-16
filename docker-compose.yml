@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   web:
+    container_name: maidvally
     build: .
     ports:
       - "5000:5000"
@@ -31,14 +32,13 @@ services:
       start_period: 30s
 
   db:
+
     image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_ROOT_PASSWORD}@${MYSQL_HOST}/${MYSQL_DATABASE}
     env_file:
       - .env
     ports:
@@ -53,6 +53,7 @@ services:
       start_period: 30s
 
   redis:
+    container_name: maidvally-redis
     image: redis:alpine
     depends_on:
       - db
@@ -67,33 +68,35 @@ services:
       start_period: 30s
     env_file:
       - .env
+    environment:
+      - REDIS_URL=${REDIS_URL}
 
   celery:
+    container_name: maidvally-celery
     build: .
     env_file:
       - .env
     environment:
       - REDIS_URL=${REDIS_URL}
-      - MYSQL_DB_URL=${MYSQL_DB_URL}
     depends_on:
       redis:
         condition: service_healthy
       web:
         condition: service_healthy
-    command: ["./wait-for-db.sh", "db", "celery", "-A", "celery_worker.celery", "worker", "--loglevel=info"]
+    command: ["./wait-for-db.sh", "db", "celery", "-A", "celery_worker.celery", "worker", "--loglevel=info", "--uid=1000"]
     restart: "on-failure:3"
 
   celery_beat:
+    container_name: maidvally-celery-beat
     build: .
     env_file:
       - .env
     environment:
       - REDIS_URL=${REDIS_URL}
-      - MYSQL_DB_URL=${MYSQL_DB_URL}
     depends_on:
       - web
       - redis
-    command: ["./wait-for-db.sh", "db", "celery", "-A", "celery_beat.celery", "beat", "--loglevel=info"]
+    command: ["./wait-for-db.sh", "db", "celery", "-A", "celery_beat.celery", "beat", "--loglevel=info", "--uid=1000"]
     restart: "on-failure:3"
 
 volumes:

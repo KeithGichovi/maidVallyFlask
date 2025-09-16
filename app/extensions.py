@@ -37,6 +37,17 @@ def make_celery(app):
     celery = Celery(app.import_name)
     celery.conf.update(app.config)
 
+    # Configure Celery with Redis
+    celery.conf.update(
+        broker_url=app.config.get('REDIS_URL', 'redis://redis:6379/0'),
+        result_backend=app.config.get('REDIS_URL', 'redis://redis:6379/0'),
+        task_serializer='json',
+        accept_content=['json'],
+        result_serializer='json',
+        timezone='UTC',
+        enable_utc=True,
+    )
+    
     class ContextTask(celery.Task):
         def __call__(self, *args, **kwargs):
             with app.app_context():
