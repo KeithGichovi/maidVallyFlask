@@ -19,7 +19,6 @@ EXPOSE 5000
 
 ENV FLASK_APP=app.py
 
-# Make wait script executable
 RUN chmod +x wait-for-db.sh
 
 CMD ["python", "app.py"] 
