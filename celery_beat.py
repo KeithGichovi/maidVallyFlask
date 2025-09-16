@@ -13,7 +13,7 @@ celery.conf.beat_schedule = {
 
     'monthly-report': {
         'task': 'app.tasks.get_monthly_report',
-        'schedule': crontab(day_of_month=1, hour=0, minute=0),
+        'schedule': crontab(day_of_month=30, hour=9, minute=30),
     },
 
     # 'test-email': {
@@ -23,7 +23,7 @@ celery.conf.beat_schedule = {
 
     'monthly_reminder_for_unpaid_jobs':{
         'task': 'app.tasks.send_monthly_reminder_for_unpaid_jobs',
-        'schedule': crontab(day_of_month=1, hour=9, minute=30),
+        'schedule': crontab(day_of_month=30, hour=9, minute=30),
     }
 
 }

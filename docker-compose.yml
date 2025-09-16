@@ -7,6 +7,15 @@ services:
       - "5000:5000"
     env_file:
       - .env
+    environment:
+      - ALLOWED_EMAILS=${ALLOWED_EMAILS}
+      - REDIS_URL=${REDIS_URL}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER}
+      - DATABASE_URL=${DATABASE_URL}
+      - BUSINESS_NOTIFICATIONS_ENABLED=${BUSINESS_NOTIFICATIONS_ENABLED}
+      - BUSINESS_NOTIFICATIONS_EMAIL=${BUSINESS_NOTIFICATIONS_EMAIL}
     depends_on:
       db:
         condition: service_healthy
@@ -24,8 +33,14 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: maidvally
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_ROOT_PASSWORD}@${MYSQL_HOST}/${MYSQL_DATABASE}
+    env_file:
+      - .env
     ports:
       - "3307:3306"
     volumes:
@@ -50,11 +65,16 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    env_file:
+      - .env
 
   celery:
     build: .
     env_file:
       - .env
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - MYSQL_DB_URL=${MYSQL_DB_URL}
     depends_on:
       redis:
         condition: service_healthy
@@ -67,6 +87,9 @@ services:
     build: .
     env_file:
       - .env
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - MYSQL_DB_URL=${MYSQL_DB_URL}
     depends_on:
       - web
       - redis
