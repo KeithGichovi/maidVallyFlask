@@ -6,13 +6,12 @@ load_dotenv()
 
 class Config:
     allowed_emails_env = os.getenv('ALLOWED_EMAILS')
-    ALLOWED_EMAILS = allowed_emails_env.split(',') if allowed_emails_env else None
+    ALLOWED_EMAILS = [email.strip() for email in allowed_emails_env.split(',')] if allowed_emails_env else []
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
     SECRET_KEY = os.urandom(32)
     TIMEZONE = 'Europe/London'
-    
     # Security settings for DEVELOPMENT
     WTF_CSRF_ENABLED = False
     SESSION_COOKIE_SECURE = False  # CHANGED: False for HTTP development

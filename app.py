@@ -13,4 +13,6 @@ if __name__ == "__main__":
         from app.init_data import init_job_types, init_sample_data
         init_job_types()
         init_sample_data()
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    debug = True if os.environ.get('FLASKENV') == 'development' else False
+    app.run(host='0.0.0.0', port=port, debug=debug, threaded=True)

@@ -24,4 +24,6 @@ ENV FLASK_APP=app.py
 
 RUN chmod +x wait-for-db.sh
 
-CMD ["python", "app.py"] 
+USER celeryuser
+
+CMD [ "python", "app.py"]
